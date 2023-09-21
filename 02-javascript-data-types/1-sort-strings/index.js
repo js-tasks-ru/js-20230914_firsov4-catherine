@@ -6,4 +6,17 @@
  */
 export function sortStrings(arr, param = 'asc') {
 
+  switch (param) {
+  case 'asc':
+    return makeSorting(arr);
+  case 'desc':
+    let reverseArray = makeSorting(arr);
+    return reverseArray.reverse();
+  }
+}
+
+function makeSorting(arr) {
+  let collator = new Intl.Collator(['ru', 'en'], {caseFirst: 'upper'});
+
+  return [...arr].sort((a, b) => collator.compare(a, b));
 }

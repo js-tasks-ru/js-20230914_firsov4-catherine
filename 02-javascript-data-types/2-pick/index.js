@@ -10,7 +10,6 @@ export const pick = (obj, ...fields) => {
   for (const [key, element] of Object.entries(obj)) {
     if (fields.includes(element)) {
       cloneObject[key] = element;
-      debugger;
     }
   }
 

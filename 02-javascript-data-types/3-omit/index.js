@@ -5,5 +5,13 @@
  * @returns {object} - returns the new object
  */
 export const omit = (obj, ...fields) => {
+  let cloneObject = {};
 
+  for (const [key, element] of Object.entries(obj)) {
+    if (!fields.includes(element)) {
+      cloneObject[key] = element;
+    }
+  }
+
+  return cloneObject;
 };

@@ -10,13 +10,12 @@ export function sortStrings(arr, param = 'asc') {
   case 'asc':
     return makeSorting(arr);
   case 'desc':
-    let reverseArray = makeSorting(arr);
-    return reverseArray.reverse();
+    return makeSorting(arr, -1);
   }
 }
 
-function makeSorting(arr) {
+function makeSorting(arr, direction = 1) {
   let collator = new Intl.Collator(['ru', 'en'], {caseFirst: 'upper'});
 
-  return [...arr].sort((a, b) => collator.compare(a, b));
+  return [...arr].sort((a, b) => direction * collator.compare(a, b));
 }

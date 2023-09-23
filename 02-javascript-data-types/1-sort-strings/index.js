@@ -5,20 +5,13 @@
  * @returns {string[]}
  */
 export function sortStrings(arr = [], param = 'asc') {
-  const directions = {
-    asc: 1,
-    desc: -1
-  };
-  const direction = directions[param];
+  let collator = new Intl.Collator(['ru', 'en'], {caseFirst: 'upper'});
+  const direction = param === 'asc' ? 1 : -1;
 
-  if (direction === undefined) {
-    throw new Error(`There is no direction for passed "${param}"`);
-  }
-
-  return makeSorting(arr, direction);
+  return makeSorting(arr, direction, collator);
 }
 
-function makeSorting(array, direction) {
-  return [...array].sort((string1, string2) =>
-    direction * string1.localeCompare(string2, ['ru', 'en'], {caseFirst: 'upper'}));
+function makeSorting(arr, direction = 1, collator) {
+  return [...arr].sort((a, b) => direction * collator.compare(a, b));
 }
+

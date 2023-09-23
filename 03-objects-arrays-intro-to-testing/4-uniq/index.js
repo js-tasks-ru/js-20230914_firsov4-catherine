@@ -5,4 +5,11 @@
  */
 export function uniq(arr) {
 
+  if (arr !== undefined) {
+    let setFromArray = new Set(arr);
+    // arr.forEach((element) => setFromArray.add(element));
+    return Array.from(setFromArray);
+  } else {
+    return [];
+  }
 }

@@ -12,6 +12,6 @@ export function invertObj(obj) {
     }
     return copyObject;
   } else {
-    return undefined;
+    return
   }
 }

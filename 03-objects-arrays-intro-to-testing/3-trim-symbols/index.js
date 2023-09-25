@@ -6,4 +6,52 @@
  */
 export function trimSymbols(string, size) {
 
+  let arrayFromString = string.split('');
+  let counter = 0;
+  let copyArray = [];
+
+  return recursion(arrayFromString, copyArray, counter, size);
 }
+
+function recursion(arrayFromString, copyArray, counter, size) {
+  const param = arrayFromString[counter];
+  let duplicateCharCounter = 0;
+  do {
+    if (duplicateCharCounter < size) {
+      copyArray.push(param);
+      duplicateCharCounter++;
+      counter++;
+    } else {
+      duplicateCharCounter++;
+      counter++;
+    }
+  } while (arrayFromString[counter] === param);
+  if (counter + 1  === arrayFromString.length) {
+    debugger;
+    return copyArray;
+  } else {
+    return recursion(arrayFromString, copyArray, counter, size);
+  }
+}
+
+//
+// function recursion(arrayFromString, copyArray, counter, size) {
+//   const param = arrayFromString[counter];
+//   let duplicateCharCounter = 0;
+//   for (counter; counter < arrayFromString.length ; counter++) {
+//     if (arrayFromString[counter] === param) {
+//       if (duplicateCharCounter <= size) {
+//         copyArray.push(param);
+//         duplicateCharCounter++;
+//       } else {
+//         duplicateCharCounter++;
+//       }
+//       return copyArray;
+//     } else {
+//       return recursion(arrayFromString, copyArray, counter, size);
+//     }
+//   }
+// }
+
+
+

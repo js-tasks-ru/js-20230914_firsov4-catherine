@@ -16,6 +16,7 @@ export function trimSymbols(string, size) {
 function recursion(arrayFromString, copyArray, counter, size) {
   const param = arrayFromString[counter];
   let duplicateCharCounter = 0;
+
   do {
     if (duplicateCharCounter < size) {
       copyArray.push(param);
@@ -26,7 +27,8 @@ function recursion(arrayFromString, copyArray, counter, size) {
       counter++;
     }
   } while (arrayFromString[counter] === param);
-  if (counter + 1  === arrayFromString.length) {
+
+  if (counter + 1 === arrayFromString.length) {
     debugger;
     return copyArray;
   } else {
@@ -34,24 +36,6 @@ function recursion(arrayFromString, copyArray, counter, size) {
   }
 }
 
-//
-// function recursion(arrayFromString, copyArray, counter, size) {
-//   const param = arrayFromString[counter];
-//   let duplicateCharCounter = 0;
-//   for (counter; counter < arrayFromString.length ; counter++) {
-//     if (arrayFromString[counter] === param) {
-//       if (duplicateCharCounter <= size) {
-//         copyArray.push(param);
-//         duplicateCharCounter++;
-//       } else {
-//         duplicateCharCounter++;
-//       }
-//       return copyArray;
-//     } else {
-//       return recursion(arrayFromString, copyArray, counter, size);
-//     }
-//   }
-// }
 
 
 

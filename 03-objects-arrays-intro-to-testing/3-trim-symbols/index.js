@@ -10,12 +10,19 @@ export function trimSymbols(string, size) {
   let counter = 0;
   let copyArray = [];
 
-  return recursion(arrayFromString, copyArray, counter, size);
+  if (size === undefined) {
+    return string;
+  } else {
+    return characterSeparator(arrayFromString, size);
+  }
 }
 
-function recursion(arrayFromString, copyArray, counter, size) {
-  const param = arrayFromString[counter];
+function characterSeparator(arrayFromString, size) {
+  let counter = 0;
+  let param = arrayFromString[counter];
   let duplicateCharCounter = 0;
+  let copyArray = [];
+
 
   do {
     if (duplicateCharCounter < size) {
@@ -26,15 +33,17 @@ function recursion(arrayFromString, copyArray, counter, size) {
       duplicateCharCounter++;
       counter++;
     }
-  } while (arrayFromString[counter] === param);
 
-  if (counter + 1 === arrayFromString.length) {
-    debugger;
-    return copyArray;
-  } else {
-    return recursion(arrayFromString, copyArray, counter, size);
-  }
+    if (arrayFromString[counter] !== param) {
+      param = arrayFromString[counter];
+      duplicateCharCounter = 0;
+    }
+  } while (counter < arrayFromString.length);
+
+  return copyArray.join('');
 }
+
+
 
 
 

@@ -20,10 +20,14 @@ export default class ColumnChart {
     this.formatHeading = formatHeading;
 
     this.element = this.createElement();
+    this.addLoadingClass(props);
+
+  }
+
+  addLoadingClass(props) {
     if (Object.keys(props).length === 0 || this.#data.length === 0) {
       this.element.classList.add('column-chart_loading');
     }
-
   }
   createElement() {
     const element = document.createElement('div');
@@ -76,8 +80,11 @@ export default class ColumnChart {
 
   update(newData) {
     this.#data = newData;
+    const oldElement = this.element;
+    const newElement = this.createElement();
+    oldElement.replaceWith(newElement);
 
-    this.createElement();
+    this.element = newElement;
   }
 
   remove() {

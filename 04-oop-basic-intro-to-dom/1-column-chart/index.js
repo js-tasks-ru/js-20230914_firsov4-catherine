@@ -20,12 +20,12 @@ export default class ColumnChart {
     this.formatHeading = formatHeading;
 
     this.element = this.createElement();
-    this.addLoadingClass(props);
+    this.addLoadingClass();
 
   }
 
-  addLoadingClass(props) {
-    if (Object.keys(props).length === 0 || this.#data.length === 0) {
+  addLoadingClass() {
+    if (this.#data.length === 0) {
       this.element.classList.add('column-chart_loading');
     }
   }

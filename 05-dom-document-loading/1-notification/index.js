@@ -16,7 +16,7 @@ export default class NotificationMessage {
 
   show(container = document.body) {
     this.element = this.createElement();
-    this.checkLastNotification();
+    this.setLastNotification();
 
     container.append(this.element);
     this.timerId = setTimeout(() => {
@@ -24,7 +24,7 @@ export default class NotificationMessage {
     }, this.duration);
   }
 
-  checkLastNotification() {
+  setLastNotification() {
     if (NotificationMessage.lastNotification) {
       NotificationMessage.lastNotification.destroy();
     }

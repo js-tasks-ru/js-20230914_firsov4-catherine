@@ -6,7 +6,7 @@
 export const createGetter = path => {
 
   const props = path.split('.');
-  
+
   return (obj) => {
     if (Object.keys(obj).length === 0) {
       return;

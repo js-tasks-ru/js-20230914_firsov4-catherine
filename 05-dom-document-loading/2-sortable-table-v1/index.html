@@ -28,8 +28,8 @@
 
 <script type="module">
   import SortableTable from './index.js';
-  import data from './products-data';
-  
+  import data from './products-data.js';
+
   const headerConfig = [
     {
       id: 'images',
@@ -71,13 +71,14 @@
 
   const sortableTable = new SortableTable(headerConfig, data);
 
-  root.append(sortableTable.element);
+  root.append(sortableTable.element.firstElementChild);
 
   sort.addEventListener('click', () => {
     const fieldValue = field.value;
     const orderValue = order.value;
 
     sortableTable.sort(fieldValue, orderValue);
+    console.log(sortableTable.subElements.body.firstElementChild.children[0]);
   });
 </script>
 </body>

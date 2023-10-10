@@ -17,57 +17,57 @@ export default class SortableTable {
   }
 
   createSubElement() {
-
-    const subElements = this.element.querySelectorAll('[data-element="body"]');
-
-
+    const subElements = this.element.querySelectorAll('[data-element]');
     Array.from(subElements).forEach(element => {
-
-      this.subElements[element.getAttribute('data-element')] = element});
-
-    // this.subElements = {
-    //   header:  this.element.querySelector('[data-element="header"]'),
-    //   body:  this.element.querySelector('[data-element="body"]')
-    // };
+      this.subElements[element.getAttribute('data-element')] = element;
+    });
 
   }
 
   createTemplate() {
     return `<div data-element="productsContainer" class="products-list__container">
                <div class="sortable-table">
+                  <div data-element="header" class="sortable-table__header sortable-table__row">
                     ${this.createHeaderTemplate()}
+                  </div>
+                  <div data-element="body" class="sortable-table__body">
                     ${this.createBodyTemplate()}
-
+                  </div>
               </div>
             </div>`;
   }
 
   createHeaderTemplate() {
-    let templateHeader = `<div data-element="header" class="sortable-table__header sortable-table__row">`;
+    let templateHeader = ``;
     for (let i of this.headerConfig) {
       templateHeader += `<div class="sortable-table__cell" data-id="${i.id}" data-sortable="${i.sortable}" >
                             <span>${i.title}</span>
                          </div>`;
     }
-    templateHeader += `</div>`;
     return templateHeader;
   }
 
   createBodyTemplate() {
-    let templateBody = `<div data-element="body" class="sortable-table__body">`;
+    let templateBody = ``;
     for (let i of this.data) {
-      templateBody += `<a href="/products/${i.id}" class="sortable-table__row">
-        <div class="sortable-table__cell">
-          <img class="sortable-table-image" alt="Image" src="">
-        </div>
-        <div class="sortable-table__cell">${i.title}</div>
-        <div class="sortable-table__cell">${i.quantity}</div>
-        <div class="sortable-table__cell">${i.price}</div>
-        <div class="sortable-table__cell">${i.sales}</div>
-      </a>`;
+      templateBody += `<a href="/products/${i.id}" class="sortable-table__row">`;
+      templateBody += this.createBodyContentTemplate(i);
+      templateBody += `</a>`;
     }
+    return templateBody;
+  }
 
-    templateBody += '</div>';
+  createBodyContentTemplate(elementData) {
+    let templateBody = ``;
+    for (let content of this.headerConfig) {
+      if (content.id === 'images') {
+        templateBody += `<div class="sortable-table__cell">
+          <img class="sortable-table-image" alt="Image" src="${elementData[content.id[0].url]}">
+        </div>`;
+      } else {
+        templateBody += `<div className="sortable-table__cell">${elementData[content.id]}</div>`;
+      }
+    }
     return templateBody;
   }
 
@@ -80,7 +80,7 @@ export default class SortableTable {
   }
 
   sort(field, type) {
-    let sortArr = [];
+    let sortArr;
 
     if (field === 'title') {
       sortArr = this.sortStrings(field, type);
@@ -93,14 +93,7 @@ export default class SortableTable {
 
   update(newData) {
     this.data = newData;
-    const newElement = document.createElement('div');
-    let div = document.querySelector('[data-element="body"]');
-
-    newElement.innerHTML = this.createBodyTemplate();
-    div.replaceWith(newElement.firstElementChild);
-
-    this.element = newElement;
-    this.createSubElement();
+    this.subElements.body.innerHTML = this.createBodyTemplate();
   }
 
   sortStrings(field, type) {
@@ -111,7 +104,6 @@ export default class SortableTable {
   }
 
   sortNumber(field, type) {
-    // debugger;
     const direction = type === 'asc' ? 1 : -1;
     return [...this.data].sort((a, b) => direction * (a[field] - b[field]));
   }

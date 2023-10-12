@@ -50,9 +50,9 @@ export default class SortableTable {
   createBodyTemplate() {
     let templateBody = ``;
     for (let i of this.data) {
-      templateBody += `<a href="/products/${i.id}" class="sortable-table__row">`;
-      templateBody += this.createBodyContentTemplate(i);
-      templateBody += `</a>`;
+      templateBody += `<a href="/products/${i.id}" class="sortable-table__row">
+                            ${this.createBodyContentTemplate(i)}
+                       </a>`;
     }
     return templateBody;
   }
@@ -65,7 +65,7 @@ export default class SortableTable {
           <img class="sortable-table-image" alt="Image" src="${elementData[content.id[0].url]}">
         </div>`;
       } else {
-        templateBody += `<div className="sortable-table__cell">${elementData[content.id]}</div>`;
+        templateBody += `<div class="sortable-table__cell">${elementData[content.id]}</div>`;
       }
     }
     return templateBody;

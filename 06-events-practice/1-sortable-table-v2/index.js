@@ -2,7 +2,6 @@ import SortableTableClass from '../../05-dom-document-loading/2-sortable-table-v
 
 export default class SortableTable extends SortableTableClass {
   type = 'asc';
-
   constructor(headersConfig, {
     data = [],
     sorted = {}
@@ -10,12 +9,19 @@ export default class SortableTable extends SortableTableClass {
   {
     super(headersConfig, data);
     this.sorted = sorted;
-    this.addMarkedIcon();
+    this.addMarkedIcon(this.sorted.id);
     this.createAction();
+    this.addDataOrder();
   }
 
-  addMarkedIcon () {
-    const sortedCol = this.sorted.id;
+  addDataOrder() {
+    const sortOrder = this.subElements.header.querySelectorAll('[data-id]');
+    for (let i of sortOrder) {
+      i.dataset.order = 'asc';
+    }
+  }
+
+  addMarkedIcon (sortedCol) {
     const sortArrow = this.subElements.header.querySelector(`[data-id = ${sortedCol}]`);
     let templateIcon = this.createIconTemplate();
 
@@ -49,17 +55,22 @@ export default class SortableTable extends SortableTableClass {
   }
 
   sortingColumn(event) {
-    this.setTypeSort();
+    this.setTypeSort(event.target);
     this.deleteIconTemplate();
-    this.addMarkedIcon();
-    super.sort(event.target.dataset.id, this.type);
-  }
+    this.addMarkedIcon(event.target.dataset.id);
 
-  setTypeSort() {
+    const idColumn = event.target.dataset.id;
+    const orderColumn = event.target.dataset.order;
+    super.sort(idColumn, orderColumn);
+
+  }
+  setTypeSort(column) {
     if (this.type === 'asc') {
       this.type = 'desc';
+      column.dataset.order = 'desc';
     } else {
       this.type = 'asc';
+      column.dataset.order = 'asc';
     }
   }
 

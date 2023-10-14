@@ -1,7 +1,6 @@
 import SortableTableClass from '../../05-dom-document-loading/2-sortable-table-v1/index.js';
 
 export default class SortableTable extends SortableTableClass {
-  type = 'asc';
   constructor(headersConfig, {
     data = [],
     sorted = {}
@@ -10,7 +9,7 @@ export default class SortableTable extends SortableTableClass {
     super(headersConfig, data);
     this.sorted = sorted;
     this.addMarkedIcon(this.sorted.id);
-    this.createAction();
+    this.createEventListeners();
     this.addDataOrder();
   }
 
@@ -23,13 +22,13 @@ export default class SortableTable extends SortableTableClass {
 
   addMarkedIcon (sortedCol) {
     const sortArrow = this.subElements.header.querySelector(`[data-id = ${sortedCol}]`);
-    let templateIcon = this.createIconTemplate();
+    const templateIcon = this.createIconElement();
 
     sortArrow.append(templateIcon);
   }
 
-  createIconTemplate() {
-    let templateIcon = document.createElement('div');
+  createIconElement() {
+    const templateIcon = document.createElement('div');
     templateIcon.innerHTML = `<span data-element="arrow" class="sortable-table__sort-arrow">
                                 <span class="sort-arrow"></span>
                               </span>`;
@@ -42,42 +41,57 @@ export default class SortableTable extends SortableTableClass {
     parent.removeChild(sortArrow);
   }
 
-  createAction() {
-    const pointerdown = new MouseEvent('pointerdown', {
-      bubbles: true
-    });
+  createEventListeners() {
 
-    document.addEventListener("pointerdown", (event) => {
-      this.sortingColumn(event);
-    });
+    const header = this.subElements.header;
 
-    this.addEventsElements(pointerdown);
+    header.addEventListener("pointerdown", (event) => {
+      this.onDocumentPointerDown(event);
+    });
   }
 
-  sortingColumn(event) {
-    this.setTypeSort(event.target);
+  onDocumentPointerDown = (event) => {
+
+    const element = event.target.closest('.sortable-table__cell[data-id]');
+    if (!element) {
+      return;
+    }
+    if (!this.subElements.header.contains(element)) {
+      return;
+    }
+
     this.deleteIconTemplate();
     this.addMarkedIcon(event.target.dataset.id);
-
-    const idColumn = event.target.dataset.id;
-    const orderColumn = event.target.dataset.order;
-    super.sort(idColumn, orderColumn);
-
+    this.sortTableByColumns(event.target);
   }
-  setTypeSort(column) {
-    if (this.type === 'asc') {
-      this.type = 'desc';
-      column.dataset.order = 'desc';
-    } else {
-      this.type = 'asc';
+
+  sortTableByColumns(column) {
+    const orderElement = column.dataset.order;
+    const idElement = column.dataset.id;
+
+    if (orderElement) {
+      if (orderElement === 'asc') {
+        super.sort(idElement, 'desc');
+      }
+      if (orderElement === 'desc') {
+        super.sort(idElement, 'asc');
+      }
+    }
+    else {
+      this.sort(idElement, 'desc');
+    }
+
+    if (orderElement === 'desc') {
       column.dataset.order = 'asc';
+    } else {
+      column.dataset.order = 'desc';
     }
   }
 
-  addEventsElements(event) {
-    let elementTitle = this.subElements.header.querySelectorAll('[data-sortable="true"]');
-    for (let div of elementTitle) {
-      div.dispatchEvent(event);
-    }
+  destroy() {
+    super.destroy();
+    this.subElements.header.removeEventListener("pointerdown", (event) => {
+      this.onDocumentPointerDown(event);
+    });
   }
 }

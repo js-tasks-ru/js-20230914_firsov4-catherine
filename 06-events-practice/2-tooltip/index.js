@@ -41,18 +41,24 @@ class Tooltip {
     if (!tooltip) {return;}
     this.render();
     this.createElementTooltip(tooltip);
+    this.setCoordinatesElement(event);
   }
 
   onDocumentPointerout = (event) => {
     const tooltip = event.target.dataset.tooltip;
     if (!tooltip) {return;}
-    this.remove();
+    const element = this.element.querySelector('div');
+    element.removeChild('span');
   }
 
   onDocumentPointermove = (event) => {
     const tooltip = event.target.dataset.tooltip;
     if (!tooltip) {return;}
 
+    this.setCoordinatesElement(event);
+  }
+
+  setCoordinatesElement(event) {
     this.element.style.top = event.clientY + 'px';
     this.element.style.left = event.clientX + 'px';
   }

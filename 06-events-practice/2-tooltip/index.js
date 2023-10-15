@@ -47,8 +47,7 @@ class Tooltip {
   onDocumentPointerout = (event) => {
     const tooltip = event.target.dataset.tooltip;
     if (!tooltip) {return;}
-    const element = this.element.querySelector('div');
-    element.removeChild('span');
+    this.remove();
   }
 
   onDocumentPointermove = (event) => {

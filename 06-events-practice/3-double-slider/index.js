@@ -59,11 +59,6 @@ export default class DoubleSlider {
   createEventListeners() {
     this.subElement.thumbRight.addEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
     this.subElement.thumbLeft.addEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
-
-    let eventRangeSelect = new CustomEvent('range-select', {detail:this.selected, bubbles: true});
-
-    this.element.dispatchEvent(eventRangeSelect);
-    document.addEventListener('range-select', (event) => this.onThumbElementPointerDown(event));
   }
 
   onThumbElementPointerDown = event => {
@@ -79,8 +74,8 @@ export default class DoubleSlider {
     this.dragging = thumbElement;
     this.element.classList.add('.range-slider_dragging');
 
-    document.addEventListener('pointermove', (event) => this.onDocumentPointerMove(event));
-    document.addEventListener('pointerup', (event) => this.onDocumentPointerUp(event));
+    document.addEventListener('pointermove', (event) => {this.onDocumentPointerMove(event);});
+    document.addEventListener('pointerup', (event) => {this.onDocumentPointerUp(event);});
   }
 
   onDocumentPointerMove = (event) => {
@@ -101,7 +96,7 @@ export default class DoubleSlider {
 
       this.dragging.style.left = this.subElement.progress.style.left = newLeft + '%';
       this.subElement.from.innerHTML = this.formatValue(this.getValueLeft(newLeft));
-      this.selected.from = this.getValueLeft(newLeft);
+      this.selected.from = Number(this.getValueLeft(newLeft));
     }
 
     if (this.dragging === this.subElement.thumbRight) {
@@ -116,23 +111,28 @@ export default class DoubleSlider {
       }
       this.dragging.style.right = this.subElement.progress.style.right = newRight + '%';
       this.subElement.to.innerHTML = this.formatValue(this.getValueRight(newRight));
-      this.selected.to = this.getValueRight(newRight);
+      this.selected.to = Number(this.getValueRight(newRight));
     }
   }
 
   getValueLeft(value) {
-    let  result = value * (this.max - this.min) / 100;
+    let result = value * (this.max - this.min) / 100;
     return (this.min + result).toFixed(0);
   }
   getValueRight(value) {
-    let  result = value * (this.max - this.min) / 100;
+    let result = value * (this.max - this.min) / 100;
     return (this.max - result).toFixed(0);
   }
 
-  onDocumentPointerUp(event) {
+  onDocumentPointerUp() {
+
+    this.element.dispatchEvent(
+      new CustomEvent('range-select', {detail: this.selected, bubbles: true})
+    );
+
     this.element.classList.remove('.range-slider_dragging');
     this.dragging = null;
-    document.removeEventListener('pointermove', (event) => this.onDocumentPointerMove(event));
+    document.removeEventListener('pointermove', this.onDocumentPointerMove);
   }
 
   remove() {
@@ -146,6 +146,6 @@ export default class DoubleSlider {
       thumb.removeEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
     }
     this.remove();
-    document.removeEventListener('pointerup', (event) => this.onDocumentPointerUp(event));
+    document.removeEventListener('pointerup', this.onDocumentPointerUp);
   }
 }

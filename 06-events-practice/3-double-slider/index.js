@@ -57,8 +57,8 @@ export default class DoubleSlider {
   }
 
   createEventListeners() {
-    this.subElement.thumbRight.addEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
-    this.subElement.thumbLeft.addEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
+    this.subElement.thumbRight.addEventListener('pointerdown', this.onThumbElementPointerDown);
+    this.subElement.thumbLeft.addEventListener('pointerdown', this.onThumbElementPointerDown);
   }
 
   onThumbElementPointerDown = event => {
@@ -74,8 +74,8 @@ export default class DoubleSlider {
     this.dragging = thumbElement;
     this.element.classList.add('.range-slider_dragging');
 
-    document.addEventListener('pointermove', (event) => {this.onDocumentPointerMove(event);});
-    document.addEventListener('pointerup', (event) => {this.onDocumentPointerUp(event);});
+    document.addEventListener('pointermove', this.onDocumentPointerMove);
+    document.addEventListener('pointerup', this.onDocumentPointerUp);
   }
 
   onDocumentPointerMove = (event) => {
@@ -124,7 +124,7 @@ export default class DoubleSlider {
     return (this.max - result).toFixed(0);
   }
 
-  onDocumentPointerUp() {
+  onDocumentPointerUp = () => {
 
     this.element.dispatchEvent(
       new CustomEvent('range-select', {detail: this.selected, bubbles: true})
@@ -142,9 +142,8 @@ export default class DoubleSlider {
   destroy() {
     const thumbs = this.element.querySelectorAll('.range-slider__inner span:not(:first-child)');
 
-    for (let thumb of thumbs) {
-      thumb.removeEventListener('pointerdown', (event) => this.onThumbElementPointerDown(event));
-    }
+    this.subElement.thumbRight.removeEventListener('pointerdown', this.onThumbElementPointerDown);
+    this.subElement.thumbLeft.removeEventListener('pointerdown', this.onThumbElementPointerDown);
     this.remove();
     document.removeEventListener('pointerup', this.onDocumentPointerUp);
   }

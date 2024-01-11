@@ -24,38 +24,10 @@ export default class ColumnChart {
     this.link = link;
     this.formatHeading = formatHeading;
 
-    this.element = this.loadImg();
+    this.element = this.createElement();
+    this.createSubElement();
 
     this.update(this.range.from, this.range.to);
-  }
-
-  loadImg() {
-    const loadingImage =  document.createElement('div');
-    loadingImage.innerHTML = this.createLoadTeamplate();
-
-
-    return loadingImage.firstElementChild;
-  }
-
-  createLoadTeamplate() {
-    return `<div class="column-chart_loading dashboard__charts">
-    <div id="orders" class="dashboard__chart_orders">
-    <div class="column-chart column-chart_loading" style="--chart-height: 50">
-      <div class="column-chart__title">
-        ${this.label}
-         ${this.createLinkTemplate()}
-      </div>
-      <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">
-
-        </div>
-        <div data-element="body" class="column-chart__chart">
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>`;
   }
 
   createElement() {
@@ -74,20 +46,33 @@ export default class ColumnChart {
   }
 
   createTemplate() {
-    return ` <div class="dashboard__chart_${this.label} ">
-    <div class="column-chart " style="--chart-height: ${this.chartHeight}">
-      <div class="column-chart__title">
-        Total ${this.label}
-        ${this.createLinkTemplate()}
-      </div>
-      <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
-        <div data-element="body" class="column-chart__chart">
-          ${this.createChartTemplate()}
+    return `
+    <div class="column-chart_loading dashboard__chart_${this.label} ">
+      <div class="column-chart " style="--chart-height: ${this.chartHeight}">
+        <div class="column-chart__title">
+          Total ${this.label}
+          ${this.createLinkTemplate()}
+        </div>
+        <div class="column-chart__container">
+          <div data-element="header" class="column-chart__header">
+          ${this.createHeaderTemplate()}
+          </div>
+          <div data-element="body" class="column-chart__chart">
+          ${this.createBodyTemplate()}
+          </div>
         </div>
       </div>
-    </div>
-  </div>`;
+     </div>`;
+  }
+
+  createBodyTemplate() {
+    return `
+          ${this.createChartTemplate()}
+        `;
+  }
+
+  createHeaderTemplate() {
+    return `${this.formatHeading(this.value)}`;
   }
 
   createLinkTemplate() {
@@ -133,13 +118,9 @@ export default class ColumnChart {
       this.data = await FetchJson(urlWithParams, params);
 
       this.value = this.countValue();
-      const oldElement = this.element;
-      const newElement = this.createElement();
-      oldElement.replaceWith(newElement);
-
-
-      this.element = newElement;
-      this.createSubElement();
+      this.subElements.header.innerHTML = this.createHeaderTemplate();
+      this.subElements.body.innerHTML = this.createBodyTemplate();
+      this.element.classList.remove('column-chart_loading');
       return this.data;
     } catch (error) {
       console.error(error);

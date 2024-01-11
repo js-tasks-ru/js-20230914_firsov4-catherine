@@ -1,4 +1,3 @@
-import ColumnChartParent from '../../04-oop-basic-intro-to-dom/1-column-chart/index.js';
 import FetchJson from "./utils/fetch-json.js";
 
 const BACKEND_URL = 'https://course-js.javascript.ru';
